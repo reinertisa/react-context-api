@@ -1,28 +1,19 @@
-import {useState} from 'react';
-import {v4 as uuid} from 'uuid';
-import NewSongForm from "./SongForm";
+import {useContext} from 'react';
+
+import {SongContext} from "../contexts/SongContext";
+import {ThemeContext} from "../contexts/ThemeContext";
+import SongDetails from "./SongDetails";
 
 export default function SongList() {
-
-    const [songs, setSongs] = useState([
-        {id: 1, title: 'let me kiss you', artist: 'Morrisey'},
-        {id: 2, title: 'save your tears', artist: 'The Weekend'},
-        {id: 3, title: 'ironic', artist: 'Alanis Morissette'},
-    ]);
-
-    const addSong = (title, artist) => setSongs([...songs, {title, artist, id: uuid()}]);
+    const {songs} = useContext(SongContext);
+    const {isLightTheme, dark, light} = useContext(ThemeContext);
+    const theme = isLightTheme ? light : dark;
 
     return (
-        <div className="song-list">
+        <div className="song-list" style={{color: theme.syntax, background: theme.bg}}>
             <ul>
-                {songs.map((song) => (
-                    <li key={song.id}>
-                        <div className="title">{song.title}</div>
-                        <div className="artist">{song.artist}</div>
-                    </li>
-                ))}
+                {songs.map((song) => <SongDetails song={song} key={song.id} />)}
             </ul>
-            <NewSongForm onSave={addSong} />
         </div>
     )
 }
